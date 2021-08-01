@@ -6,7 +6,6 @@ from datetime import datetime
 def main():
     while(True):
         print("checking...")
-        broadcast_message("testing"+str(datetime.now()))
         new_results = search_results()
         message:str = ""
         if new_results:
@@ -14,7 +13,7 @@ def main():
                 message += f"<b>{result}</b>\n"
             message += """<a href='http://results.uoc.ac.in'>See Results</a>"""
             broadcast_message(message)
-        time.sleep(60)
+        time.sleep(900)
 
 if __name__=="__main__":
     print("starting...")
