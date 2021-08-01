@@ -5,9 +5,9 @@ TOKEN = bot_token
 URL = telegram_api_url
 
 # function to send a message to the cs result notification channel
-def broadcast_message(messages):
+def broadcast_message(message:str):
     try:
-        params = {'chat_id':channel_id, 'text': str(messages)}
+        params = {'chat_id':channel_id, 'text': message, "parse_mode": "HTML"}
         response = requests.post(URL + '/sendMessage', data=params)
         print(response.status_code)
     except Exception as e:
