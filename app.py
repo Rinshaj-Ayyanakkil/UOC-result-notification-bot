@@ -1,18 +1,15 @@
-from datetime import datetime
-import requests
-from config import bot_token, channel_id,telegram_api_url
+import time
+from bot import broadcast_message
+from scrapper import search_results
 
-TOKEN = bot_token
-URL = telegram_api_url
+def main():
+    while(True):
+        print("checking...")
+        new_results = search_results()
+        if new_results:
+            broadcast_message(new_results)
+        time.sleep(900)
 
-def broadcast_message(message:str):
-    try:
-        params = {'chat_id':channel_id, 'text': message}
-        response = requests.post(URL + '/sendMessage', data=params)
-        print(response)
-    except Exception as e:
-        print(e)
-
-if __name__ == '__main__':
-    print("starting")
-    broadcast_message("hello testing. datetime:"+str(datetime.now()))
+if __name__=="__main__":
+    print("starting...")
+    main()
