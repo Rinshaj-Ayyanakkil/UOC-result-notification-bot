@@ -1,7 +1,7 @@
 import time
 from bot import broadcast_message
 from scrapper import search_results
-from datetime import datetime
+from config import sleep_interval
 
 def main():
     while(True):
@@ -13,7 +13,7 @@ def main():
                 message += f"<b>{result}</b>\n"
             message += """<a href='http://results.uoc.ac.in'>See Results</a>"""
             broadcast_message(message)
-        time.sleep(900)
+        time.sleep(int(sleep_interval))
 
 if __name__=="__main__":
     print("starting...")
