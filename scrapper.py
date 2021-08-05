@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 
 URL = exam_result_url
-last_result = {"id":None}
+last_result = {"id":"9334"}
 
 session = HTMLSession()
 
