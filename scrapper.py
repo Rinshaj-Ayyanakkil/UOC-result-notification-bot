@@ -1,6 +1,6 @@
 from typing import Union
 from bs4.element import ResultSet
-from requests_html import HTML, HTMLSession
+import requests
 from config import exam_result_url
 from bs4 import BeautifulSoup
 
@@ -8,14 +8,13 @@ from bs4 import BeautifulSoup
 URL = exam_result_url
 last_result = {"id": "9334"}
 
-session = HTMLSession()
 
 # function to fetch all the CUCBCSS results
 def get_all_results() -> ResultSet:
-    res = session.post(URL, data={"cour_id": 15})
-    html: HTML = res.html
+    response = requests.post(URL, data={"cour_id": 15})
+    html = response.text
 
-    soup = BeautifulSoup(html.html, "html.parser")
+    soup = BeautifulSoup(html, "html.parser")
     results = soup.find_all("a", {"class": "am"})
     return results
 
