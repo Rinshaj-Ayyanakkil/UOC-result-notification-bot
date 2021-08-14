@@ -1,28 +1,48 @@
+import logging
 from typing import Union
-from bs4.element import ResultSet
 import requests
-from config import exam_result_url
 from bs4 import BeautifulSoup
-
+from config import LAST_RESULT_ID, exam_result_url
 
 URL = exam_result_url
-last_result = {"id": "9334"}
+last_result = {"id": LAST_RESULT_ID}
 
+logger = logging.getLogger("scrapper")
 
 # function to fetch all the CUCBCSS results
-def get_all_results() -> ResultSet:
-    response = requests.post(URL, data={"cour_id": 15})
-    html = response.text
+def get_all_results():
+    try:
+        response = requests.post(URL, data={"cour_id": 15})
 
-    soup = BeautifulSoup(html, "html.parser")
-    results = soup.find_all("a", {"class": "am"})
-    return results
+    except Exception as e:
+        logger.error("Couldn't connect to " + URL)
+        return []
+
+    try:
+        html = response.text
+
+        soup = BeautifulSoup(html, "html.parser")
+        results = soup.find_all("a", {"class": "am"})
+        return results
+
+    except Exception as e:
+        logger.exception(e)
+
+    return []
 
 
 def is_result_updated(results) -> bool:
     # check if the last result id is changed
-    if last_result["id"] != results[0]["id"]:
-        return True
+    try:
+        if last_result["id"] != results[0]["id"]:
+            return True
+
+    except IndexError as e:
+        logger.error("empty result")
+
+    except Exception as e:
+        logger.exception(e)
+
     return False
 
 
@@ -36,6 +56,7 @@ def search_results() -> Union[list, None]:
 
     new_cs_results = []
     for result_element in results:
+
         exam_name: str = result_element.text
 
         # check if result id hit the last result id
@@ -43,7 +64,7 @@ def search_results() -> Union[list, None]:
             break
 
         # if the exam name of the result element contains 'BSC CS', it is added to the list
-        if exam_name.find("B.Sc (CUCBCSS UG)") != -1:
+        if exam_name.find("B.Sc") != -1:
             new_cs_results.append(exam_name)
 
     # update the last result id with latest result id
